@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Config struct {
+type PostgresConfig struct {
   Host        string
   Port        string
   Username    string
@@ -15,7 +15,7 @@ type Config struct {
   SSLMode     string
 }
 
-func NewPostgresDB(config Config) (*sqlx.DB, error) {
+func NewPostgresDB(config PostgresConfig) (*sqlx.DB, error) {
   db, error := sqlx.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
     config.Host, config.Port, config.Username, config.DBName, config.Password, config.SSLMode))
   if error != nil {
@@ -23,12 +23,17 @@ func NewPostgresDB(config Config) (*sqlx.DB, error) {
 			"package": 		"repository",
 			"function":		"NewPostgresDB",
 			"error":			error,
-		}).Fatal("Database open error. ")
+		}).Fatal("Postgres database open error. ")
     return nil, error
   }
 
   error = db.Ping()
   if error != nil {
+    log.WithFields(log.Fields{
+			"package": 		"repository",
+			"function":		"NewPostgresDB",
+			"error":			error,
+		}).Fatal("Postgres ping error. ")
     return nil, error
   }
 

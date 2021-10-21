@@ -3,7 +3,8 @@
 package repository
 
 import (
-	"github.com/jmoiron/sqlx"
+	//"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 )
 
 type ShortURL interface {
@@ -16,8 +17,20 @@ type Repository struct {
 	ShortURL
 }
 
-func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{
-		ShortURL: NewShortURLPostgres(db),
+func NewRepository(db Database) *Repository {
+	if db.DBType == Postgres {
+		return &Repository{
+			ShortURL: NewShortURLPostgres(db.Postgres),
+		}
+	} else if db.DBType == Redis {
+		return &Repository{
+			ShortURL: NewShortURLRedis(db.Redis),
+		}
+	} else {
+		log.WithFields(log.Fields{
+      "package": 		"repository",
+      "function":		"NewRepository",
+    }).Fatal("Unknown database")
+		return &Repository{}
 	}
 }

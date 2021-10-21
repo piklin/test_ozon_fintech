@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	log "github.com/sirupsen/logrus"
 	_ "github.com/lib/pq"
 	forum "github.com/piklin/test_ozon_fintech/pkg"
@@ -10,21 +11,11 @@ import (
 )
 
 func main() {
-	db, error := repository.NewPostgresDB(repository.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		Password: "123456",
-		DBName:   "postgres",
-		SSLMode:  "disable",
-	})
-	if error != nil {
-		log.WithFields(log.Fields{
-			"package": 		"main",
-			"function":		"main",
-			"error":			error,
-		}).Fatal("Database initialize error")
-	}
+	var databaseType string				//redis or postgres
+	flag.StringVar(&databaseType, "db", "postgres", "database type")
+	flag.Parse()
+
+	db := repository.NewDatabase(databaseType)
 
 	repository := repository.NewRepository(db)
 	services := service.NewService(repository)
