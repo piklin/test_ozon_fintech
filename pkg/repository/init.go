@@ -23,9 +23,9 @@ func NewDatabase(dbType string) Database {
     db, error := NewPostgresDB(PostgresConfig{
   		Host:     "localhost",
   		Port:     "5432",
-  		Username: "postgres",
-  		Password: "123456",
-  		DBName:   "postgres",
+  		Username: "docker",
+  		Password: "docker",
+  		DBName:   "docker",
   		SSLMode:  "disable",
   	})
   	if error != nil {
