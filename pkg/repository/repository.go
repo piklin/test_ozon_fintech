@@ -7,6 +7,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+//go:generate go run github.com/golang/mock/mockgen -source=repository.go -destination=mocks/mock.go
+
 type ShortURL interface {
 	Create(generatedURL, full_url string) error
 	SearchShortURL(shortURL string) (string, error)
@@ -28,9 +30,9 @@ func NewRepository(db Database) *Repository {
 		}
 	} else {
 		log.WithFields(log.Fields{
-      "package": 		"repository",
-      "function":		"NewRepository",
-    }).Fatal("Unknown database")
+			"package":  "repository",
+			"function": "NewRepository",
+		}).Fatal("Unknown database")
 		return &Repository{}
 	}
 }

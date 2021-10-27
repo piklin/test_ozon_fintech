@@ -1,6 +1,6 @@
 package models
 
-type URL struct {
+type URLRequest struct {
 	URL string `json:"url"   binding:"required"`
 }
 

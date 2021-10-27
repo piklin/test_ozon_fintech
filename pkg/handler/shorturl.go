@@ -8,9 +8,9 @@ import (
 )
 
 func (h *Handler) createShortURL(c *gin.Context) {
-	var input models.URL
+	var input models.URLRequest
 
-	if error := c.Bind(&input); error != nil {
+	if error := c.BindJSON(&input); error != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, "Invalid input")
 		return
 	}

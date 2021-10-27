@@ -12,7 +12,7 @@ const (
 	symbols     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 	shortURTLen = 10
 	// HARDCODE!!!!! К сожалению, красивое и элегантное решение для хоста не смог придумать. Но, думаю, с опытом это придет
-	host 				= "localhost:8080"
+	host = "localhost:8080"
 )
 
 type ShortURLService struct {
@@ -23,7 +23,6 @@ func NewShortURLService(repository repository.ShortURL) *ShortURLService {
 	return &ShortURLService{repository: repository}
 }
 
-
 func (s *ShortURLService) GetFullURL(shortURL string) (string, error) {
 	fullURL, error := s.repository.SearchShortURL(shortURL)
 	if error != nil {
@@ -32,8 +31,7 @@ func (s *ShortURLService) GetFullURL(shortURL string) (string, error) {
 	return fullURL, nil
 }
 
-
-func (s *ShortURLService) Create(url models.URL) (string, error) {
+func (s *ShortURLService) Create(url models.URLRequest) (string, error) {
 	shortURL, error := s.repository.SearchFullURL(url.URL)
 	if error != nil {
 		return "", error
@@ -43,7 +41,7 @@ func (s *ShortURLService) Create(url models.URL) (string, error) {
 		return host + "/" + shortURL, nil
 	}
 
-	generatedURL, error := s.generateShortURL()
+	generatedURL, error := s.GenerateShortURL()
 	if error != nil {
 		return "", error
 	}
@@ -51,8 +49,7 @@ func (s *ShortURLService) Create(url models.URL) (string, error) {
 	return host + "/" + generatedURL, s.repository.Create(generatedURL, url.URL)
 }
 
-
-func (s *ShortURLService) generateShortURL() (string, error) {
+func (s *ShortURLService) GenerateShortURL() (string, error) {
 	shortURL := make([]byte, shortURTLen)
 
 	rand.Seed(time.Now().UnixNano())
